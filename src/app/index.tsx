@@ -4,7 +4,7 @@ import { styles } from "./styles";
 import { TVItem } from "./TVItem";
 
 export default function Index() {
-  const { tvsState, setTvsState } = useAppContext();
+  const { tvsState } = useAppContext();
 
   return (
     <View style={styles.pageContainer}>

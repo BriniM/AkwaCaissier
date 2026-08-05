@@ -1,8 +1,8 @@
 export type TelevisionState = {
   tvNumber: number;
   isOccupied: boolean;
-  currentSession: Game[] | null;
-  pastSessions: Game[][] | null;
+  currentSession: Game[];
+  pastSessions: Game[][];
 };
 
 export type Game = {
@@ -12,43 +12,11 @@ export type Game = {
   notes?: string;
 };
 
-export function getTvsStateInitialState(): TelevisionState[] | (() => TelevisionState[]) {
-  return [
-    {
-      tvNumber: 1,
+export function getTvsStateInitialState(): TelevisionState[] {
+  return [1, 2, 3, 4, 5, 6].map(i => ({
+      tvNumber: i,
       isOccupied: false,
-      currentSession: null,
-      pastSessions: null,
-    },
-    {
-      tvNumber: 2,
-      isOccupied: false,
-      currentSession: null,
-      pastSessions: null,
-    },
-    {
-      tvNumber: 3,
-      isOccupied: false,
-      currentSession: null,
-      pastSessions: null,
-    },
-    {
-      tvNumber: 4,
-      isOccupied: false,
-      currentSession: null,
-      pastSessions: null,
-    },
-    {
-      tvNumber: 5,
-      isOccupied: false,
-      currentSession: null,
-      pastSessions: null,
-    },
-    {
-      tvNumber: 6,
-      isOccupied: false,
-      currentSession: null,
-      pastSessions: null,
-    },
-  ];
+      currentSession: [],
+      pastSessions: [],
+    }));
 }

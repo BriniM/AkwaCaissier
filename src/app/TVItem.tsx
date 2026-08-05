@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
-import { Pressable, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+
 import { styles } from "./styles";
 import { TelevisionState } from "./utility/util";
 
@@ -21,7 +22,9 @@ export function TVItem({ tv }: { tv: TelevisionState }) {
           tv.isOccupied && styles.televisionItemOccupied,
         ]}
       >
-        <p style={styles.tvItemMargin}>P{tv.tvNumber}</p>
+        <Text style={[styles.tvItemMargin, styles.buttonText]}>
+          P{tv.tvNumber}
+        </Text>
       </View>
     </Pressable>
   );

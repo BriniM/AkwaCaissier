@@ -1,4 +1,5 @@
 import { View } from "react-native";
+
 import { useAppContext } from "./context/AppContext";
 import { styles } from "./styles";
 import { TVItem } from "./TVItem";

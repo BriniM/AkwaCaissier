@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
     flexDirection: "row-reverse",
   },
   televisionItem: {
-    color: "white",
     backgroundColor: "green",
     padding: 20,
     marginRight: 20,
@@ -32,5 +31,20 @@ export const styles = StyleSheet.create({
   tvItemMargin: {
     marginLeft: 20,
     marginRight: 20,
+  },
+  button: {
+    backgroundColor: "green",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  alignSelfFlexStart: {
+    alignSelf: "flex-start",
+  },
+  alignItemsCenter: {
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
   },
 });

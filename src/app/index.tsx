@@ -1,55 +1,27 @@
-import { useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
-import { getTvsStateInitialState, TelevisionState } from "./utility/util";
+import { View } from "react-native";
+import { useAppContext } from "./context/AppContext";
+import { styles } from "./styles";
+import { TVItem } from "./TVItem";
 
 export default function Index() {
-  let [tvsState, setTvsState] = useState<TelevisionState[]>(
-    getTvsStateInitialState(),
-  );
+  const { tvsState, setTvsState } = useAppContext();
 
   return (
-    <View style={styles.container}>
-      {tvsState.map((tv) => (
-        <Pressable
-          onPress={() => console.log(`Pressed TV ${tv}`)}
-          key={tv.tvNumber}
-        >
-          <View
-            style={[
-              styles.televisionItem,
-              tv.isOccupied && styles.televisionItemOccupied,
-            ]}
-            key={tv.tvNumber}
-          >
-            <p style={styles.tvItemMargin}>P{tv.tvNumber}</p>
+    <View style={styles.pageContainer}>
+      <View style={styles.tvsWrapper}>
+        <View>
+          <View style={styles.tvRow}>
+            {tvsState.slice(0, 4).map((tv) => (
+              <TVItem tv={tv} key={tv.tvNumber} />
+            ))}
           </View>
-        </Pressable>
-      ))}
+          <View style={[styles.tvRow, styles.secondTvRow]}>
+            {tvsState.slice(4, 6).map((tv) => (
+              <TVItem tv={tv} key={tv.tvNumber} />
+            ))}
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 20,
-    marginTop: 20,
-  },
-  televisionItem: {
-    color: "white",
-    backgroundColor: "green",
-    padding: 20,
-    marginRight: 20,
-    borderRadius: 20,
-  },
-  televisionItemOccupied: {
-    backgroundColor: "red",
-  },
-  tvItemMargin: {
-    marginLeft: 20,
-    marginRight: 20,
-  },
-});

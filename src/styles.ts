@@ -5,6 +5,29 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  tvPageContainer: {
+    justifyContent: "flex-start",
+    padding: 16,
+  },
+  matchDetailsContainer: {
+    flex: 1,
+    width: "100%",
+  },
+  matchDetailsHeader: {
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  matchListContainer: {
+    flex: 1,
+    width: "100%",
+  },
+  matchList: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 16,
+    gap: 12,
+  },
   tvsWrapper: {
     display: "flex",
     alignItems: "center",
@@ -37,6 +60,9 @@ export const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+  },
+  destructiveButton: {
+    backgroundColor: "red",
   },
   alignSelfFlexStart: {
     alignSelf: "flex-start",

@@ -129,6 +129,23 @@ function MatchEditor({
     }
   }
 
+  function deleteMatch() {
+    setTvsState((currentState) =>
+      currentState.map((item) =>
+        item.tvNumber === tvId
+          ? {
+              ...item,
+              currentSession: item.currentSession.filter(
+                (_, currentIndex) => currentIndex !== matchIndex,
+              ),
+            }
+          : item,
+      ),
+    );
+
+    onDone();
+  }
+
   const completionButtonLabel = endedAt ? "Mark incomplete" : "Mark complete";
   const completionAction = () => saveMatch(endedAt ? null : Date.now());
 
@@ -192,6 +209,17 @@ function MatchEditor({
           onPress={onDone}
         >
           <Text style={styles.buttonText}>Back</Text>
+        </Pressable>
+
+        <Pressable
+          style={[
+            styles.button,
+            styles.destructiveButton,
+            styles.alignSelfFlexStart,
+          ]}
+          onPress={deleteMatch}
+        >
+          <Text style={styles.buttonText}>Delete Match</Text>
         </Pressable>
       </View>
     </View>

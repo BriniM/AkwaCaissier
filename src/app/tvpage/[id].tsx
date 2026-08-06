@@ -95,6 +95,21 @@ function MatchDetails({
     );
   }
 
+  function deleteSessionByIndex(sessionIndex: number) {
+    setTvsState(
+      tvsState.map((item) =>
+        item.tvNumber === tv.tvNumber
+          ? {
+              ...item,
+              pastSessions: item.pastSessions.filter(
+                (_, index) => index !== sessionIndex,
+              ),
+            }
+          : item,
+      ),
+    );
+  }
+
   function selectSession(sessionIndex: number) {
     const selectedSession = tv.pastSessions[sessionIndex];
 
@@ -216,6 +231,7 @@ function MatchDetails({
         >
           <Text style={styles.buttonText}>Mark session as complete</Text>
         </Pressable>
+        {/* calculate total for selected history sessions. */}
       </View>
 
       <Modal
@@ -362,24 +378,38 @@ function MatchDetails({
                           key={`history-${sessionNumber}-${game.startedAt}`}
                         />
                       ))}
-                      <Pressable
-                        style={[styles.button, styles.sessionActionButton]}
-                        onPress={() => selectSession(originalSessionIndex)}
-                      >
-                        <Text style={styles.buttonText}>Select session</Text>
-                      </Pressable>
-                      <Pressable
-                        style={[styles.button, styles.sessionActionButton]}
-                        onPress={() =>
-                          toggleSessionCompletion(originalSessionIndex)
-                        }
-                      >
-                        <Text style={styles.buttonText}>
-                          {session.isComplete
-                            ? "Mark incomplete"
-                            : "Mark complete"}
-                        </Text>
-                      </Pressable>
+                      <View style={styles.matchDetailsHeader}>
+                        <Pressable
+                          style={[
+                            styles.button,
+                            styles.sessionActionButton,
+                            styles.destructiveButton,
+                          ]}
+                          onPress={() => {
+                            deleteSessionByIndex(originalSessionIndex);
+                          }}
+                        >
+                          <Text style={styles.buttonText}>Delete session</Text>
+                        </Pressable>
+                        <Pressable
+                          style={[styles.button, styles.sessionActionButton]}
+                          onPress={() => selectSession(originalSessionIndex)}
+                        >
+                          <Text style={styles.buttonText}>Select session</Text>
+                        </Pressable>
+                        <Pressable
+                          style={[styles.button, styles.sessionActionButton]}
+                          onPress={() =>
+                            toggleSessionCompletion(originalSessionIndex)
+                          }
+                        >
+                          <Text style={styles.buttonText}>
+                            {session.isComplete
+                              ? "Mark incomplete"
+                              : "Mark complete"}
+                          </Text>
+                        </Pressable>
+                      </View>
                     </View>
                   );
                 })

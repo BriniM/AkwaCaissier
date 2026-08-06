@@ -75,6 +75,7 @@ function MatchDetails({
 
     const completedSession: Session = {
       completedAt: Date.now(),
+      isComplete: true,
       games: tv.currentSession.map((game) => ({
         ...game,
         endedAt: game.endedAt ?? Date.now(),
@@ -105,6 +106,7 @@ function MatchDetails({
       ? [
           {
             completedAt: Date.now(),
+            isComplete: false,
             games: tv.currentSession.map((game) => ({
               ...game,
               endedAt: game.endedAt ?? Date.now(),
@@ -128,6 +130,29 @@ function MatchDetails({
                 ),
                 ...archivedActiveSession,
               ],
+            }
+          : item,
+      ),
+    );
+  }
+
+  function toggleSessionCompletion(sessionIndex: number) {
+    setTvsState(
+      tvsState.map((item) =>
+        item.tvNumber === tv.tvNumber
+          ? {
+              ...item,
+              pastSessions: item.pastSessions.map((session, index) =>
+                index === sessionIndex
+                  ? {
+                      ...session,
+                      isComplete: !session.isComplete,
+                      completedAt: !session.isComplete
+                        ? Date.now()
+                        : session.completedAt,
+                    }
+                  : session,
+              ),
             }
           : item,
       ),
@@ -314,6 +339,8 @@ function MatchDetails({
                   const sessionTotal = calculateInvoiceTotal(
                     session.games,
                   ).total;
+                  const originalSessionIndex =
+                    tv.pastSessions.length - reversedIndex - 1;
 
                   return (
                     <View
@@ -321,7 +348,7 @@ function MatchDetails({
                       style={styles.sessionBlock}
                     >
                       <Text style={styles.sessionTitle}>
-                        Session {sessionNumber} - Completed at{" "}
+                        {session.isComplete ? "Complete" : "Incomplete"} -{" "}
                         {formatDateTime(session.completedAt)} - Total{" "}
                         {formatCurrency(sessionTotal)}
                       </Text>
@@ -337,13 +364,21 @@ function MatchDetails({
                       ))}
                       <Pressable
                         style={[styles.button, styles.sessionActionButton]}
-                        onPress={() =>
-                          selectSession(
-                            tv.pastSessions.length - reversedIndex - 1,
-                          )
-                        }
+                        onPress={() => selectSession(originalSessionIndex)}
                       >
                         <Text style={styles.buttonText}>Select session</Text>
+                      </Pressable>
+                      <Pressable
+                        style={[styles.button, styles.sessionActionButton]}
+                        onPress={() =>
+                          toggleSessionCompletion(originalSessionIndex)
+                        }
+                      >
+                        <Text style={styles.buttonText}>
+                          {session.isComplete
+                            ? "Mark incomplete"
+                            : "Mark complete"}
+                        </Text>
                       </Pressable>
                     </View>
                   );

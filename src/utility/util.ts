@@ -7,6 +7,7 @@ export type TelevisionState = {
 
 export type Session = {
   completedAt: number;
+  isComplete: boolean;
   games: Game[];
 };
 

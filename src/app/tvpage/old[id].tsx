@@ -55,25 +55,18 @@ function MatchDetails({
 }) {
   const [invoiceVisible, setInvoiceVisible] = useState(false);
   const [totalVisible, setTotalVisible] = useState(false);
-  const [selectedSessions, setSelectedSessions] = useState<number[]>([]);
   const invoice = useMemo(
     () => calculateInvoiceTotal(tv.currentSession),
     [tv.currentSession],
   );
-  const total = useMemo(() => {
-    const selectedGames = selectedSessions.flatMap(
-      (index) => tv.pastSessions[index]?.games ?? [],
-    );
-    return calculateInvoiceTotal(selectedGames);
-  }, [selectedSessions, tv.pastSessions]);
-
-  function toggleSessionSelection(sessionIndex: number) {
-    setSelectedSessions((current) =>
-      current.includes(sessionIndex)
-        ? current.filter((i) => i !== sessionIndex)
-        : [...current, sessionIndex],
-    );
-  }
+  const total = useMemo(
+    () =>
+      calculateInvoiceTotal([
+        ...tv.currentSession,
+        ...tv.pastSessions.flatMap((session) => session.games),
+      ]),
+    [tv.currentSession, tv.pastSessions],
+  );
 
   function completeSession() {
     if (tv.currentSession.length === 0) {
@@ -238,6 +231,7 @@ function MatchDetails({
         >
           <Text style={styles.buttonText}>Mark session as complete</Text>
         </Pressable>
+        {/* calculate total for selected history sessions. */}
       </View>
 
       <Modal
@@ -302,8 +296,8 @@ function MatchDetails({
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>TV Total</Text>
             <Text style={styles.totalSummaryText}>
-              {selectedSessions.length} session
-              {selectedSessions.length === 1 ? "" : "s"} selected
+              {total.lineItems.length} match
+              {total.lineItems.length === 1 ? "" : "es"}
             </Text>
             <Text style={styles.totalSummaryAmount}>
               {formatCurrency(total.total)}
@@ -402,24 +396,6 @@ function MatchDetails({
                           onPress={() => selectSession(originalSessionIndex)}
                         >
                           <Text style={styles.buttonText}>Select session</Text>
-                        </Pressable>
-                        <Pressable
-                          style={[
-                            styles.button,
-                            styles.sessionActionButton,
-                            selectedSessions.includes(originalSessionIndex)
-                              ? styles.totalButton
-                              : null,
-                          ]}
-                          onPress={() =>
-                            toggleSessionSelection(originalSessionIndex)
-                          }
-                        >
-                          <Text style={styles.buttonText}>
-                            {selectedSessions.includes(originalSessionIndex)
-                              ? "✓ Selected"
-                              : "Select"}
-                          </Text>
                         </Pressable>
                         <Pressable
                           style={[styles.button, styles.sessionActionButton]}

@@ -7,7 +7,7 @@ import { Game, TelevisionState } from "../utility/util";
 
 export default function TVPage() {
   const { id } = useLocalSearchParams();
-  const { tvsState } = useAppContext();
+  const { tvsState, setTvsState } = useAppContext();
 
   const tvId = Number(id);
   const tv = tvId && tvsState.find((t) => t.tvNumber === tvId);
@@ -15,7 +15,7 @@ export default function TVPage() {
   return (
     <View style={[styles.pageContainer, styles.alignItemsCenter]}>
       {tv ? (
-        <MatchDetails tv={tv} tvsState={tvsState} />
+        <MatchDetails tv={tv} tvsState={tvsState} setTvsState={setTvsState} />
       ) : (
         <Text>Incorrect URL</Text>
       )}
@@ -25,28 +25,41 @@ export default function TVPage() {
 function MatchDetails({
   tv,
   tvsState,
+  setTvsState,
 }: {
   tv: TelevisionState;
   tvsState: TelevisionState[];
+  setTvsState: (newState: TelevisionState[]) => void;
 }) {
   return (
     <View>
       <Pressable
         style={[styles.button, styles.alignSelfFlexStart]}
         onPress={() => {
-          // we mutate the state here.
-          // from tvsState, we need to find the tv with the same tvNumber as tv.tvNumber and splice it.
-          let splicedTv = tvsState.splice(
-            tvsState.findIndex((t) => t.tvNumber === tv.tvNumber),
-            1,
-          )[0];
+          setTvsState(
+            tvsState.map((t) =>
+              t.tvNumber === tv.tvNumber
+                ? {
+                    ...t,
+                    currentSession: [
+                      ...t.currentSession,
+                      {
+                        gameType: "TBD",
+                        startedAt: Date.now(),
+                        endedAt: null,
+                      },
+                    ],
+                  }
+                : t,
+            ),
+          );
         }}
       >
         <Text style={styles.buttonText}>Create new match</Text>
       </Pressable>
 
       {tv.currentSession.map((game) => (
-        <MatchLine game={game} />
+        <MatchLine game={game} key={`${game.startedAt}`} />
       ))}
       {tv.currentSession.length == 0 && <Text>No matches played yet</Text>}
     </View>

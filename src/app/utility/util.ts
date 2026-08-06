@@ -6,9 +6,9 @@ export type TelevisionState = {
 };
 
 export type Game = {
-  gameType: "2F" | "3F" | "4F" | "AJ";
-  startedAt: Date;
-  endedAt: Date | null;
+  gameType: "2F" | "3F" | "4F" | "AJ" | "TBD";
+  startedAt: number; // unix timestamp in milliseconds
+  endedAt: number | null; // unix timestamp in milliseconds
   notes?: string;
 };
 

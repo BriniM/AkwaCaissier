@@ -1,8 +1,8 @@
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-import { styles } from "./styles";
-import { TelevisionState } from "./utility/util";
+import { styles } from "@/styles";
+import { TelevisionState } from "../utility/util";
 
 export function TVItem({ tv }: { tv: TelevisionState }) {
   const router = useRouter();

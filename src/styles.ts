@@ -41,6 +41,11 @@ export const styles = StyleSheet.create({
   alignSelfFlexStart: {
     alignSelf: "flex-start",
   },
+  inlineEditButton: {
+    marginBottom: 0,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+  },
   alignItemsCenter: {
     alignItems: "center",
   },

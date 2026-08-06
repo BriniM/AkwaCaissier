@@ -1,9 +1,9 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
-import { useAppContext } from "../context/AppContext";
-import { styles } from "../styles";
-import { Game, TelevisionState } from "../utility/util";
+import { styles } from "@/styles";
+import { useAppContext } from "../../context/AppContext";
+import { formatDateTime, Game, TelevisionState } from "../../utility/util";
 
 export default function TVPage() {
   const { id } = useLocalSearchParams();
@@ -58,20 +58,57 @@ function MatchDetails({
         <Text style={styles.buttonText}>Create new match</Text>
       </Pressable>
 
-      {tv.currentSession.map((game) => (
-        <MatchLine game={game} key={`${game.startedAt}`} />
+      {tv.currentSession.map((game, matchIndex) => (
+        <MatchLine
+          game={game}
+          tvId={tv.tvNumber}
+          matchIndex={matchIndex}
+          key={`${game.startedAt}`}
+        />
       ))}
       {tv.currentSession.length == 0 && <Text>No matches played yet</Text>}
     </View>
   );
 }
 
-function MatchLine({ game }: { game: Game }) {
+function MatchLine({
+  game,
+  tvId,
+  matchIndex,
+}: {
+  game: Game;
+  tvId: number;
+  matchIndex: number;
+}) {
+  const router = useRouter();
+
   return (
-    <Text>
-      Match type: {game.gameType} - Started at: {game.startedAt.toString()} -
-      Ended at: {game.endedAt?.toString() || "Ongoing"} - Notes:{" "}
-      {game.notes || "None"}
-    </Text>
+    <View
+      style={{
+        marginBottom: 12,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        gap: 8,
+      }}
+    >
+      <Text style={{ flexShrink: 1 }}>
+        Match type: {game.gameType} - Started at:{" "}
+        {formatDateTime(game.startedAt)} - Ended at:{" "}
+        {game.endedAt ? formatDateTime(game.endedAt) : "Ongoing"} - Notes:{" "}
+        {game.notes || "None"}
+      </Text>
+      <Pressable
+        style={[styles.button, styles.inlineEditButton]}
+        onPress={() => {
+          router.push({
+            pathname: "/match-edit" as never,
+            params: { tvId: String(tvId), matchIndex: String(matchIndex) },
+          });
+        }}
+      >
+        <Text style={styles.buttonText}>✎ Edit</Text>
+      </Pressable>
+    </View>
   );
 }

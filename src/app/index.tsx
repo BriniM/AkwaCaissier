@@ -1,8 +1,8 @@
 import { View } from "react-native";
 
-import { useAppContext } from "./context/AppContext";
-import { styles } from "./styles";
-import { TVItem } from "./TVItem";
+import { styles } from "@/styles";
+import { TVItem } from "../components/TVItem";
+import { useAppContext } from "../context/AppContext";
 
 export default function Index() {
   const { tvsState } = useAppContext();

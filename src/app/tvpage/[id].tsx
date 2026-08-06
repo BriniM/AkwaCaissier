@@ -10,19 +10,38 @@ export default function TVPage() {
   const { tvsState } = useAppContext();
 
   const tvId = Number(id);
-
   const tv = tvId && tvsState.find((t) => t.tvNumber === tvId);
 
   return (
     <View style={[styles.pageContainer, styles.alignItemsCenter]}>
-      {tv ? <MatchDetails tv={tv} /> : <Text>Incorrect URL</Text>}
+      {tv ? (
+        <MatchDetails tv={tv} tvsState={tvsState} />
+      ) : (
+        <Text>Incorrect URL</Text>
+      )}
     </View>
   );
 }
-function MatchDetails({ tv }: { tv: TelevisionState }) {
+function MatchDetails({
+  tv,
+  tvsState,
+}: {
+  tv: TelevisionState;
+  tvsState: TelevisionState[];
+}) {
   return (
     <View>
-      <Pressable style={[styles.button, styles.alignSelfFlexStart]}>
+      <Pressable
+        style={[styles.button, styles.alignSelfFlexStart]}
+        onPress={() => {
+          // we mutate the state here.
+          // from tvsState, we need to find the tv with the same tvNumber as tv.tvNumber and splice it.
+          let splicedTv = tvsState.splice(
+            tvsState.findIndex((t) => t.tvNumber === tv.tvNumber),
+            1,
+          )[0];
+        }}
+      >
         <Text style={styles.buttonText}>Create new match</Text>
       </Pressable>
 

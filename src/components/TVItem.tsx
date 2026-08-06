@@ -19,7 +19,7 @@ export function TVItem({ tv }: { tv: TelevisionState }) {
       <View
         style={[
           styles.televisionItem,
-          tv.isOccupied && styles.televisionItemOccupied,
+          tv.currentSession.length > 0 && styles.televisionItemOccupied,
         ]}
       >
         <Text style={[styles.tvItemMargin, styles.buttonText]}>

@@ -11,6 +11,8 @@ import {
     TelevisionState,
 } from "../utility/util";
 
+const MATCH_TYPES_WITH_EXTRA_TIME: Game["gameType"][] = ["2F", "3F", "4F"];
+
 function firstParam(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
@@ -93,14 +95,18 @@ function MatchEditor({
   onDone: () => void;
 }) {
   const [gameType, setGameType] = useState<Game["gameType"]>(game.gameType);
+  const [extraTime, setExtraTime] = useState<boolean>(game.extraTime ?? false);
   const [notes, setNotes] = useState(game.notes ?? "");
   const [endedAt, setEndedAt] = useState<number | null>(game.endedAt);
 
   useEffect(() => {
     setGameType(game.gameType);
+    setExtraTime(game.extraTime ?? false);
     setNotes(game.notes ?? "");
     setEndedAt(game.endedAt);
   }, [game]);
+
+  const canHaveExtraTime = MATCH_TYPES_WITH_EXTRA_TIME.includes(gameType);
 
   function saveMatch(nextEndedAt: number | null = endedAt) {
     setTvsState((currentState) =>
@@ -114,6 +120,7 @@ function MatchEditor({
                     ? {
                         ...currentGame,
                         gameType,
+                        extraTime: canHaveExtraTime ? extraTime : undefined,
                         notes: notes.trim() ? notes.trim() : undefined,
                         endedAt: nextEndedAt,
                       }
@@ -146,8 +153,11 @@ function MatchEditor({
     onDone();
   }
 
-  const completionButtonLabel = endedAt ? "Mark incomplete" : "Mark complete";
-  const completionAction = () => saveMatch(endedAt ? null : Date.now());
+  function completeMatch() {
+    saveMatch(Date.now());
+
+    onDone();
+  }
 
   return (
     <View style={{ gap: 12 }}>
@@ -170,6 +180,38 @@ function MatchEditor({
           </Pressable>
         ))}
       </View>
+
+      {canHaveExtraTime && (
+        <View style={{ gap: 8 }}>
+          <Text style={{ fontSize: 16, fontWeight: "600" }}>
+            Was there extra time?
+          </Text>
+          <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
+            <Pressable
+              onPress={() => setExtraTime(true)}
+              style={{
+                backgroundColor: extraTime ? "green" : "#d1d5db",
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                borderRadius: 999,
+              }}
+            >
+              <Text style={{ color: extraTime ? "white" : "black" }}>Yes</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => setExtraTime(false)}
+              style={{
+                backgroundColor: !extraTime ? "green" : "#d1d5db",
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                borderRadius: 999,
+              }}
+            >
+              <Text style={{ color: !extraTime ? "white" : "black" }}>No</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
 
       <View style={{ gap: 8 }}>
         <Text style={{ fontSize: 16, fontWeight: "600" }}>Notes</Text>
@@ -199,9 +241,9 @@ function MatchEditor({
 
         <Pressable
           style={[styles.button, styles.alignSelfFlexStart]}
-          onPress={completionAction}
+          onPress={completeMatch}
         >
-          <Text style={styles.buttonText}>{completionButtonLabel}</Text>
+          <Text style={styles.buttonText}>Mark Match as complete</Text>
         </Pressable>
 
         <Pressable
